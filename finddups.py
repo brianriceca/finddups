@@ -7,6 +7,7 @@ import getopt
 import hashlib
 
 filenames_by_size = {}
+sizes_by_filename = {}
 
 def md5(fn):
     hash_md5 = hashlib.md5()
@@ -33,6 +34,7 @@ for a in sys.argv:
             if s not in filenames_by_size:
                 filenames_by_size[s] = []
             filenames_by_size[s].append(fullpath)
+            sizes_by_filename[fullpath] = s
             filecount += 1
             if filecount % 100 == 0:
                 print("sized " + str(filecount) + " files...",end='\r')
@@ -62,8 +64,7 @@ for key in filenames_by_size_copy:
 
 print(" ")
            
-for key in filenames_by_hash:
-    if len(filenames_by_hash[key]) > 1:
-        print("---" + key + "---------------")
-        for f in filenames_by_hash[key]:
-            print(f)
+for k in sorted(filenames_by_hash.keys(), key=lambda x: sizes_by_filename[filenames_by_hash[x][0]], reverse=True):
+    print("---" + os.path.basename(filenames_by_hash[k][0]) + "---------------")
+    for f in filenames_by_hash[k]:
+        print(f)
