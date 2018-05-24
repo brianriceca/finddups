@@ -17,6 +17,7 @@ def md5(fn):
     return hash_md5.hexdigest()
 
 filecount = 0
+dupcount = 0
 
 for a in sys.argv:
      for dirName, subdirList, fileList in os.walk(a):
@@ -38,22 +39,19 @@ for a in sys.argv:
             filecount += 1
             if filecount % 100 == 0:
                 print("sized " + str(filecount) + " files...",end='\r')
+            if len(filenames_by_size[s]) > 1:
+                dupcount += 1
 
 print(" ")
 
-filenames_by_size_copy = {}
-for key in filenames_by_size:
-    if len(filenames_by_size[key]) > 1:
-        filenames_by_size_copy[key] = filenames_by_size[key]
-
-print(str(len(filenames_by_size_copy)) + " suspected dups!")
+print(str(dupcount) + " suspected dups!")
 
 filecount = 0
 filenames_by_hash = {}
 
-for key in filenames_by_size_copy:
-    if len(filenames_by_size_copy[key]) > 1:
-        for f in filenames_by_size_copy[key]:
+for key in filenames_by_size:
+    if len(filenames_by_size[key]) > 1:
+        for f in filenames_by_size[key]:
             h = md5(f)
             if h not in filenames_by_hash:
                 filenames_by_hash[h] = []
