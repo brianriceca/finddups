@@ -27,6 +27,8 @@ for a in sys.argv:
             continue
         if '@SynoResource' in dirName:
             continue
+        if '@eaDir' in dirName:
+            continue
         for f in fileList:
             fullpath = os.path.join(dirName,f)
             s = os.path.getsize(fullpath)
@@ -63,6 +65,7 @@ for key in filenames_by_size:
 print(" ")
            
 for k in sorted(filenames_by_hash.keys(), key=lambda x: sizes_by_filename[filenames_by_hash[x][0]], reverse=True):
-    print("---" + os.path.basename(filenames_by_hash[k][0]) + "---------------")
-    for f in filenames_by_hash[k]:
-        print(f)
+    if len(filenames_by_hash[k]) > 1:
+        print("---" + os.path.basename(filenames_by_hash[k][0]) + ": " + str(len(filenames_by_hash[k])) + "---------------")
+        for f in filenames_by_hash[k]:
+           print(f)
